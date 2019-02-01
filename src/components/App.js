@@ -10,11 +10,10 @@ class App extends Component {
   constructor() {
     super()
     this.state = {
-      pigs: [],
-      newPigs: [],
+      pigs: hogs,
       selectedHog: null,
-      filter: false,
-      type: ""
+      filters: false,
+      type: "all"
     }
   }
 
@@ -23,48 +22,43 @@ class App extends Component {
    this.setState({selectedHog})
   }
 
-  componentDidMount = () => {
-    this.setState(
-      {
-        pigs: hogs,
-        newPigs: hogs
-      }
-    )
+  sortAndFilterPigs = () => {
+    let newPigs = [...this.state.pigs]
+    const weightKey = 'weight as a ratio of hog to LG - 24.7 Cu. Ft. French Door Refrigerator with Thru-the-Door Ice and Water'
+    const nameKey = 'name'
+    console.log(this.state.filters)
+    console.log(this.state.type)
+    if (this.state.filters === true) {
+      newPigs = newPigs.filter(pig => pig.greased === true)
+    }
+    if (this.state.type === nameKey) {
+      newPigs = newPigs.sort((a,b) => a[nameKey].localeCompare(b[nameKey]))
+    }
+    else if (this.state.type === weightKey) {
+      newPigs = newPigs.sort((a,b) => a[weightKey]-(b[weightKey]))
+    }
+    return newPigs
+  }
+
+  handleChangeFilter = () => {
+    //console.log(this.state.filters)
+    this.setState({
+      filters: !this.state.filters
+    })
+    //console.log(this.state.filters)
   }
 
   handleChangeType = (value) => {
-    if (value === "name") {
+    if (value === 'all') {
       this.setState({
-        newPigs: this.state.pigs.slice().sort((a,b) => a[value].localeCompare(b[value])),
-        type: value
-      })
-    }
-    else if (value === 'weight as a ratio of hog to LG - 24.7 Cu. Ft. French Door Refrigerator with Thru-the-Door Ice and Water') {
-      this.setState({
-        newPigs: this.state.pigs.slice().sort((a,b) => a[value]-(b[value])),
-        type: value
-      })
-    }
-    else if (value === "all"){
-      this.setState({
-        newPigs: this.state.pigs,
-        type: "all"
-      })
-    }
-  }
-
-  handleFilterPigsClick = () => {
-    if (this.state.filter === false) {
-      this.setState({
-        newPigs: this.state.newPigs.slice().filter(pig => pig.greased === true),
-        filter: true
+        type: value,
+        filters: false
       })
     }
     else {
       this.setState({
-        filter: false
+        type: value
       })
-      this.handleChangeType(this.state.type) //Link the greased filter to the sort bar
     }
   }
 
@@ -72,11 +66,12 @@ class App extends Component {
     return (
       <div className="App">
         <Nav/>
-        <Options onChangeType={this.handleChangeType} onFilterPigsClick={this.handleFilterPigsClick} filter={this.state.filter}/>
-        <PigList pigs={this.state.newPigs} onClickPig={this.showDetails} selectedHog={this.state.selectedHog}/>
+        <Options onChangeType={this.handleChangeType} onChangeFilter={this.handleChangeFilter} filters={this.state.filters} type={this.state.type} />
+        <PigList pigs={this.sortAndFilterPigs()} onClickPig={this.showDetails} selectedHog={this.state.selectedHog}/>
       </div>
     )
   }
+
 }
 
 export default App;

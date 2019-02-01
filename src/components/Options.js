@@ -19,9 +19,9 @@ export default class Options extends Component {
             <div className="field">
                 <button
                   className="ui secondary button"
-                  onClick={this.props.onFilterPigsClick}
+                  onClick={this.props.onChangeFilter}
                 >
-                  {this.props.filter === false ? `Find Greased Pigs!` : `Show All Piggies!`}
+                  {this.props.filters === false ? `Find Greased Pigs!` : `Show All Piggies!`}
                 </button>
             </div>
         </div>

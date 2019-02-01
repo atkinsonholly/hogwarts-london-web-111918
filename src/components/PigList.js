@@ -4,7 +4,7 @@ import Pig from './Pig'
 export default class PigList extends Component {
 
   makePigURL = (singlePig) => {
-    return (require(`../hog-imgs/${singlePig.name.toLowerCase().replace(/ /gi, "_")}.jpg`))
+    return (`/hog-imgs/${singlePig.name.toLowerCase().replace(/ /gi, "_")}.jpg`)
   }
 
   render(){
